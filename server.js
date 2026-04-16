@@ -20,10 +20,10 @@ const questions = [
   {question:"8+1=?",options:["7","8","9","10"],answer:"9"}
 ];
 
-// Leaderboard
+// ✅ Only ONE leaderboard
 let leaderboard = [];
 
-// ✅ Root route (fixes "Cannot GET /")
+// Root route
 app.get("/", (req, res) => {
   res.send("Quiz Backend is Running 🚀");
 });
@@ -61,7 +61,7 @@ app.get("/leaderboard", (req, res) => {
   res.json(leaderboard.slice(0, 10));
 });
 
-// ✅ IMPORTANT: dynamic port for Render
+// ✅ Render port fix
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
