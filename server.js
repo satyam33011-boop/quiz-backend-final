@@ -19,6 +19,12 @@ const questions = [
 ];
 
 let leaderboard = [];
+let leaderboard = [];
+
+app.get("/", (req, res) => {
+  res.send("Quiz Backend is Running 🚀");
+});
+
 
 app.get("/questions", (req,res)=>res.json(questions));
 
@@ -44,4 +50,6 @@ app.get("/leaderboard",(req,res)=>{
   res.json(leaderboard.slice(0,10));
 });
 
-app.listen(5000,()=>console.log("running"));
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
