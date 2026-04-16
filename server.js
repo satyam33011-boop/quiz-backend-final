@@ -2,9 +2,11 @@ const express = require("express");
 const cors = require("cors");
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
+// Questions
 const questions = [
   {question:"2+2=?",options:["2","3","4","5"],answer:"4"},
   {question:"5*3=?",options:["15","10","20","8"],answer:"15"},
@@ -18,38 +20,50 @@ const questions = [
   {question:"8+1=?",options:["7","8","9","10"],answer:"9"}
 ];
 
-let leaderboard = [];
+// Leaderboard
 let leaderboard = [];
 
+// ✅ Root route (fixes "Cannot GET /")
 app.get("/", (req, res) => {
   res.send("Quiz Backend is Running 🚀");
 });
 
-
-app.get("/questions", (req,res)=>res.json(questions));
-
-app.post("/submit",(req,res)=>{
-  const {name,answers,timeTaken}=req.body;
-  let score=0;
-
-  questions.forEach((q,i)=>{
-    if(q.answer===answers[i]) score++;
-  });
-
-  leaderboard.push({name,score,timeTaken});
-
-  leaderboard.sort((a,b)=>{
-    if(b.score===a.score) return a.timeTaken-b.timeTaken;
-    return b.score-a.score;
-  });
-
-  res.json({score,total:questions.length});
+// Get questions
+app.get("/questions", (req, res) => {
+  res.json(questions);
 });
 
-app.get("/leaderboard",(req,res)=>{
-  res.json(leaderboard.slice(0,10));
+// Submit quiz
+app.post("/submit", (req, res) => {
+  const { name, answers, timeTaken } = req.body;
+
+  let score = 0;
+
+  questions.forEach((q, i) => {
+    if (q.answer === answers[i]) score++;
+  });
+
+  const result = { name, score, timeTaken };
+
+  leaderboard.push(result);
+
+  // Sort leaderboard
+  leaderboard.sort((a, b) => {
+    if (b.score === a.score) return a.timeTaken - b.timeTaken;
+    return b.score - a.score;
+  });
+
+  res.json({ score, total: questions.length });
 });
 
+// Get leaderboard
+app.get("/leaderboard", (req, res) => {
+  res.json(leaderboard.slice(0, 10));
+});
+
+// ✅ IMPORTANT: dynamic port for Render
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
